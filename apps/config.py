@@ -29,7 +29,9 @@ class BaseConfig:
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=1)
     #     COOKIE
     REMEMBER_COOKIE_NAME = 'session_id'
-    
+    # 上传文件的最大长度
+    MAX_CONTENT_LENGTH = 10 * 1024 * 1024
+
 
 def get_db_uri(database: dict):
     engine = database.get('ENGINE') or 'mysql'
