@@ -1,3 +1,4 @@
+from flask_cors import CORS
 from flask_uploads import UploadSet, IMAGES, DOCUMENTS, configure_uploads
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -8,10 +9,6 @@ from flask_caching import Cache
 
 # 初始化第三方插件
 def init_ext(app):
-    # 全局配置session信息
-    init_session(app)
-    #  全局配置cookie信息
-    init_cookie(app)
     # 初始化数据库
     init_db(app)
     # 初始化登录模块
@@ -20,6 +17,8 @@ def init_ext(app):
     init_caching(app)
     # 初始化文件上传
     init_upload(app)
+    # 解决跨域请求的问题
+    init_cors(app)
 
 
 db = SQLAlchemy()
@@ -38,7 +37,6 @@ lm = LoginManager()
 
 def init_login(app: Flask):
     lm.login_view = '/account/login/'
-    # basic   strong  None
     lm.session_protection = 'strong'
     lm.init_app(app)
 
@@ -94,8 +92,18 @@ doc_set = UploadSet(name='doc', extensions=DOCUMENTS)
 """
  config_uploads 初始化UploadSet对象
 """
+
+
 def init_upload(app: Flask):
     # 初始化img_set
     configure_uploads(app, img_set)
-    # patch_request_class(app,size=32 * 1024 * 1024)
     configure_uploads(app, doc_set)
+
+
+# 协议 ip地址, 端口
+# 解决前后端分离跨域问题
+cors = CORS(resources={r"/api/*": {"origins": "*"}})
+
+
+def init_cors(app):
+    cors.init_app(app)

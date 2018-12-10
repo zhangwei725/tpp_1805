@@ -9,7 +9,6 @@
 """
 import datetime
 import os
-import time
 
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_ROOT_PATH = os.path.join(BASE_DIR, 'static/upload/')
@@ -47,9 +46,11 @@ def get_db_uri(database: dict):
 
 # 开发环境
 class DeveloperConfig(BaseConfig):
+    DEBUG = True
     SECRET_KEY = '123456'
     database = {
         'ENGINE': 'mysql',
+        'NAME': 'tpp',
     }
     # 输出sql语句
     SQLALCHEMY_ECHO = True
@@ -91,6 +92,21 @@ class ProductConfig(BaseConfig):
 ENVI_DEFAULT_KEY = ENVI_DEV_KEY = 'default'
 ENVI_PRODUCT_DEFAULT_KEY = 'product'
 
+environment = {
+    'default': DeveloperConfig,
+    'dev': DeveloperConfig,
+    'product': ProductConfig
+}
+environment = {
+    'default': DeveloperConfig,
+    'dev': DeveloperConfig,
+    'product': ProductConfig
+}
+environment = {
+    'default': DeveloperConfig,
+    'dev': DeveloperConfig,
+    'product': ProductConfig
+}
 environment = {
     'default': DeveloperConfig,
     'dev': DeveloperConfig,
