@@ -3,15 +3,30 @@
 缓存配置
 登录配置
 文件上传配置
-
-
-
 """
 import datetime
 import os
 
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_ROOT_PATH = os.path.join(BASE_DIR, 'static/upload/')
+
+DATABASES = {
+    'dev': {
+        'ENGINE': 'mysql',
+        'NAME': 'tpp',
+    },
+    'pro': {
+        'ENGINE': 'mysql',
+        'HOST': '112.74.42.138',
+        'PORT': '3306',
+        'NAME': 'film',
+    }
+}
+
+# 关联用户
+# 关联电影
+# 分数的字段
+
 
 
 class BaseConfig:
@@ -48,13 +63,9 @@ def get_db_uri(database: dict):
 class DeveloperConfig(BaseConfig):
     DEBUG = True
     SECRET_KEY = '123456'
-    database = {
-        'ENGINE': 'mysql',
-        'NAME': 'tpp',
-    }
     # 输出sql语句
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = get_db_uri(database)
+    SQLALCHEMY_DATABASE_URI = get_db_uri(DATABASES.get('dev'))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # 缓存配置
     CACHE_REDIS_HOST = '127.0.0.1'
@@ -65,20 +76,16 @@ class DeveloperConfig(BaseConfig):
 
 # 生成数据连接 dialect+driver://username:password@host:port/database
 
+
 # 生产环境
 class ProductConfig(BaseConfig):
     DEBUG = False
     SECRET_KEY = '4ce01aa944434ff4880b29b0992ee846'
-    database = {
-        'ENGINE': 'mysql',
-        'HOST': '112.74.42.138',
-        'PORT': '3306',
-        'NAME': 'film',
-    }
+
     # 生成环境小设置连接池的数量
     SQLALCHEMY_POOL_SIZE = 100
     # 配置数据连接路径
-    SQLALCHEMY_DATABASE_URI = get_db_uri(database)
+    SQLALCHEMY_DATABASE_URI = get_db_uri(DATABASES.get('pro'))
     # 禁用改动发送信号
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     #   缓存配置
@@ -92,21 +99,6 @@ class ProductConfig(BaseConfig):
 ENVI_DEFAULT_KEY = ENVI_DEV_KEY = 'default'
 ENVI_PRODUCT_DEFAULT_KEY = 'product'
 
-environment = {
-    'default': DeveloperConfig,
-    'dev': DeveloperConfig,
-    'product': ProductConfig
-}
-environment = {
-    'default': DeveloperConfig,
-    'dev': DeveloperConfig,
-    'product': ProductConfig
-}
-environment = {
-    'default': DeveloperConfig,
-    'dev': DeveloperConfig,
-    'product': ProductConfig
-}
 environment = {
     'default': DeveloperConfig,
     'dev': DeveloperConfig,

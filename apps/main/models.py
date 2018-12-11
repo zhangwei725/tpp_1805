@@ -43,3 +43,11 @@ class Banner(db.Model):
     order = db.Column(db.Integer, default=0)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
     is_delete = db.Column(db.Boolean, default=False)
+
+
+class Rating(db.Model):
+    sid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # 评分字段
+    score = db.Column(db.Float(3, 1), default=0.0)
+    # 关联电影
+    movie_id = db.Column(db.Integer, db.ForeignKey(Movie.id, ondelete='CASCADE'))
