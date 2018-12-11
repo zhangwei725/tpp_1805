@@ -102,7 +102,8 @@ def init_upload(app: Flask):
 
 # 协议 ip地址, 端口
 # 解决前后端分离跨域问题
-cors = CORS(resources={r"/api/*": {"origins": "*"}})
+# cors = CORS(resources={r"/api/*": {"origins": "*"}})
+cors = CORS()
 
 
 def init_cors(app):
