@@ -1,6 +1,7 @@
 from flask_restful import Resource, fields, marshal_with
 from sqlalchemy import func, desc, asc
 
+from apps.main import field
 from apps.main.field import RatingFields
 from apps.main.models import Banner, Movie, Rating
 
@@ -23,16 +24,24 @@ class IndexResource(Resource):
             ready_movies = Movie.query.filter(Movie.flag == 2).order_by(Movie.open_day).limit(5).offset(0).all()
             hot_count = Movie.query.filter(Movie.flag == 1).count()
             ready_count = Movie.query.filter(Movie.flag == 2).count()
-            result.update(data={
+            data = {
                 'banners': banners,
                 'hot_movies': hot_movies,
                 'ready_movies': ready_movies,
                 'hot_count': hot_count,
                 'ready_count': ready_count,
-            })
+            }
+            return to_response_success(data, fields=field.IndexFields.result_fields)
         except Exception as e:
-            result.update(status=404, msg='获取数据失败')
-        return result
+            return to_response_error()
+
+
+"""
+# 分组查询  group_by
+# 分组统计  func.max() func.count(),func.avg()   设置别名 label
+# 排序    直接通过字段可以掉 desc()  涉及到统计函数,desc(别名)  
+# 外连接   左外连接   右外连接  全连接
+"""
 
 
 class HotRankingResource(Resource):
@@ -42,13 +51,36 @@ class HotRankingResource(Resource):
         # group by  movie_id
         # oder by  avg
         #    分组 统计
+        # 确定表
+        #  rating 表    评分
+        #  movie  表     电影id  电影图片  电影的名称
+        # 确定关联字段
+        # id = movie_id
+
+        # SELECT  m.id ,m.show_name,m.image,round(avg(r.score)) avg
+        # FROM movie m ,rating r
+        # where m.id = r.movie_id
+        # group by  r.movie.id
+        # order by  avg  desc
+
         try:
             # [()]
-            ranking_moviess = Rating.query.with_entities(Rating.movie_id, func.avg(Rating.score).label('avg')) \
-                .group_by(Rating.movie_id).order_by(desc('avg')).limit(5).all()
-            data = []
-            for rank in ranking_moviess:
-                data.append({'score': rank[1]})
+            # 四舍五入round()
+            # 截取 truncate
+            # [()]
+            ratings = Rating.query. \
+                with_entities(Rating.movie_id,
+                              func.round(func.avg(Rating.score).label('score'), 1)
+                              , Movie.image, Movie.show_name) \
+                .join(Movie, Movie.id == Rating.movie_id) \
+                .group_by(Rating.movie_id) \
+                .order_by(desc('score')) \
+                .limit(5).offset(0).all()
+
+            data = [{'movie_id': rating[0], 'score': rating[1],
+                     'image': rating[2],
+                     'show_name': rating[3],
+                     } for rating in ratings]
             return to_response_success(data=data, fields=RatingFields.result_fields)
         except Exception as e:
             return to_response_error()

@@ -42,7 +42,7 @@ class RatingFields:
     data_fields = {
         'movie_id': fields.Integer,
         'score': fields.Float,
-        'name': fields.String,
+        'show_name': fields.String,
         'image': fields.String,
     }
 
