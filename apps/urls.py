@@ -1,6 +1,6 @@
 from flask_restful import Api
 
-from apps.cinemas.apis import CinemasResource, CinemasDistrictResource
+from apps.cinemas.apis import CinemasResource, CinemasDistrictResource, UpdateResource, CinemaDetail
 from apps.main.apis import IndexResource, HotRankingResource
 
 # Resource注册
@@ -18,3 +18,6 @@ api.add_resource(HotRankingResource, '/score/')
 api.add_resource(MoviesPageResource, '/movies/')
 api.add_resource(CinemasResource, '/cinemas/')
 api.add_resource(CinemasDistrictResource, '/cinemas/district/')
+api.add_resource(UpdateResource, '/update/')
+# 影院详情
+api.add_resource(CinemaDetail, '/cinemas/detail/')

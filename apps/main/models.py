@@ -33,6 +33,7 @@ class Movie(db.Model):
     image = db.Column(db.String(256))
     flag = db.Column(db.Integer)
     is_delete = db.Column(db.Boolean, default=False)
+    hs_list = db.relationship('HallScheduling', lazy='dynamic', backref='movie')
 
 
 class Banner(db.Model):

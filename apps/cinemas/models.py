@@ -1,4 +1,5 @@
 from apps.ext import db
+from apps.main.models import Movie
 
 
 class Cinema(db.Model):
@@ -28,6 +29,8 @@ class Cinema(db.Model):
     astrict = db.Column(db.Integer)
     # 是否删除
     is_delete = db.Column(db.Boolean, default=True)
+    hs_list = db.relationship('HallScheduling', lazy='dynamic', backref='cinema')
+    halls = db.relationship('Hall', lazy='dynamic', backref='cinema')
 
 
 class Hall(db.Model):
@@ -61,3 +64,18 @@ class Seats(db.Model):
     #     外键设置
     cid = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
     hid = db.Column(db.Integer, db.ForeignKey(Hall.hid))
+
+
+# 影厅排片表
+class HallScheduling(db.Model):
+    hsid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    '''1未开始,2正在放映,3结束放映'''
+    status = db.Column(db.Integer, default=1)
+    start = db.Column(db.DateTime, nullable=False)
+    end = db.Column(db.DateTime, nullable=False)
+    origin_price = db.Column(db.Numeric(7, 2), nullable=False)
+    current_price = db.Column(db.Numeric(7, 2), nullable=False)
+    movie_id = db.Column(db.Integer, db.ForeignKey(Movie.id))
+    cinema_id = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
+    hall_id = db.Column(db.Integer, db.ForeignKey(Hall.hid))
+    is_delete = db.Column(db.Boolean, default=False)

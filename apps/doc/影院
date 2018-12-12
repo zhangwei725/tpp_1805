@@ -30,7 +30,26 @@ y坐标
 影厅ID
 
 
-排片表
+影厅排片表 HallSchedulings
+影片的开始时间 start
+影片的结束时间 end
+原价           origin_price
+现价           current_price
+电影ID        movie_id
+影院ID        cinema_id
+影厅ID        hall_id
+状态(未开始,正在放映,结束放映) status
+is_delete
+
+
+
+
+座位排期
+
+
+
+
+
 
 
 
