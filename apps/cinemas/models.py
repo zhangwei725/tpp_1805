@@ -1,0 +1,63 @@
+from apps.ext import db
+
+
+class Cinema(db.Model):
+    """
+        影院表
+    """
+    cid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # 影院的名称
+    name = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    # 城市
+    city = db.Column(db.String(64))
+    # 区域
+    district = db.Column(db.String(64))
+    # 地址
+    address = db.Column(db.String(255))
+    # 联系电话
+    phone = db.Column(db.String(11))
+    # 评分
+    score = db.Column(db.Float(3, 1))
+    # 影厅的数量
+    hall_num = db.Column(db.Integer)
+    # True 营业    false 休息
+    flag = db.Column(db.Integer, default=1)
+    # 服务费
+    service_money = db.Column(db.Numeric(3, 1))
+    # 限购数量
+    astrict = db.Column(db.Integer)
+    # 是否删除
+    is_delete = db.Column(db.Boolean, default=True)
+
+
+class Hall(db.Model):
+    hid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # 影厅的名字
+    name = db.Column(db.String(100), nullable=False)
+    # 1表示 2D 21 3D 3表示4D  4 表示  3D MAX
+    screen_type = db.Column(db.Integer, nullable=False)
+    # 影厅的座位
+    seat_num = db.Column(db.Integer, nullable=False)
+    # 影厅的状态 1 表示营业  2 表示打烊
+    status = db.Column(db.Integer, default=1)
+    # 是否删除
+    is_delete = db.Column(db.Boolean, default=True)
+    cid = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
+
+
+class Seats(db.Model):
+    sid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # 1.普通  2.豪华 3 超豪华
+    type = db.Column(db.Integer, nullable=False)
+    # 座位的坐标
+    x = db.Column(db.Integer, nullable=False)
+    y = db.Column(db.Integer, nullable=False)
+    # True 正常  False 损毁
+    status = db.Column(db.Boolean, default=True)
+    # 是否可选
+    is_choose = db.Column(db.Boolean, default=True)
+    # 是否删除
+    is_delete = db.Column(db.Boolean, default=True)
+    #     外键设置
+    cid = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
+    hid = db.Column(db.Integer, db.ForeignKey(Hall.hid))
