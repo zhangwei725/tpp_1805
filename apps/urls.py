@@ -17,6 +17,7 @@ api.add_resource(IndexResource, '/')
 api.add_resource(HotRankingResource, '/score/')
 api.add_resource(MoviesPageResource, '/movies/')
 api.add_resource(CinemasResource, '/cinemas/')
+# 影院区县的地址
 api.add_resource(CinemasDistrictResource, '/cinemas/district/')
 api.add_resource(UpdateResource, '/update/')
 # 影院详情

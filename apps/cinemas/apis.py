@@ -11,7 +11,7 @@ class CinemasResource(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('city', type=str, default='北京')
-        self.parser.add_argument('district', type=str)
+        self.parser.add_argument('district', type=int)
         self.parser.add_argument('sort', type=int)
         self.parser.add_argument('keyword', type=str)
 
@@ -28,7 +28,7 @@ class CinemasResource(Resource):
             district = args.get('district')
             sort = args.get('sort')
             query = Cinema.query.filter(Cinema.city == city)
-            if district:
+            if district and district > 0:
                 # 如果有选中区域   where  city=1988 and district= 989
                 query = query.filter(Cinema.district == district)
             #     1表示升序
@@ -37,7 +37,7 @@ class CinemasResource(Resource):
                 query = query.order_by(Cinema.score.desc())
             elif sort == 2:
                 # 表示升序
-                query.order_by(Cinema.score.asc())
+                query = query.order_by(Cinema.score.asc())
             cinemas = query.all()
             return to_response_success(cinemas, fields=CinemasFields.result_fields)
         except Exception as e:
@@ -70,12 +70,8 @@ class CinemasDistrictResource(Resource):
 
 1>影院的信息
 2>影院排片信息
-
 必要参数影院id
-
 多对多  必须有第三张表
-
-
 
 """
 
