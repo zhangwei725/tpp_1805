@@ -1,9 +1,10 @@
 from flask_restful import Resource, fields, marshal_with
 from sqlalchemy import func, desc, asc
 
+from apps.ext import cache
 from apps.main import field
 from apps.main.field import RatingFields
-from apps.main.models import Banner, Movie, Rating
+from apps.main.models import Banner, Movie, Rating, Area
 
 # limit  offset
 # 横向拆分 经常变化的数据尽量拆分
@@ -85,4 +86,13 @@ class HotRankingResource(Resource):
         except Exception as e:
             return to_response_error()
 
-# 给电影添加评分的接口
+
+# 获取城市字母相关信息
+
+class AreaResource(Resource):
+    @cache(10 * 24 * 60)
+    def get(self):
+        firsts = Area.query.with_entities(Area.first).filter(Area.level == 2).group_by(Area.first).order_by(Area.first)
+        ares = []
+        for first in firsts:
+            ares.append({first[0], Area.query.filter(Area.level == 2, Area.first == first[0]).all()})

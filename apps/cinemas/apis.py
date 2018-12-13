@@ -96,7 +96,7 @@ class CinemaDetail(Resource):
                 'hs_list': hs_list
             }
             return to_response_success(data=data, fields=CinemaDetailFields.result_fields)
-        except:
+        except Exception as e:
             return to_response_error()
 
 

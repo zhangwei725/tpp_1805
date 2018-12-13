@@ -23,10 +23,10 @@ DATABASES = {
     }
 }
 
+
 # 关联用户
 # 关联电影
 # 分数的字段
-
 
 
 class BaseConfig:
@@ -56,13 +56,12 @@ def get_db_uri(database: dict):
     port = database.get('PORT') or '3306'
     name = database.get('NAME')
     charset = database.get('CHARSET') or 'utf8'
-    return f"{engine}+{driver}://{user}:{password}@{host}:{port}/{name}?charset={charset}"
+    return "{}+{}://{}:{}@{}:{}/{}?charset={}".format(engine, driver, user, password, host, port, name, charset)
 
 
 # 开发环境
 class DeveloperConfig(BaseConfig):
-    DEBUG = True
-    SECRET_KEY = '123456'
+    SECRET_KEY = '4ce01aa944434ff4880b29b0992ee846'
     # 输出sql语句
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = get_db_uri(DATABASES.get('dev'))
