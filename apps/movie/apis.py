@@ -18,7 +18,6 @@ class MoviesPageResource(Resource):
         args = self.parser.parse_args()
         flag = 1 if args.get('flag') == 1 else 2
         pagination = Movie.query.filter(Movie.flag == flag).paginate(page=args.get('page'),
-                                                                     per_page=args.get('size'),
                                                                      error_out=False)
         data = {'movies': pagination.items, 'pagination': pagination}
         return to_response_success(data=data, fields=MoviesFields.result_fields)

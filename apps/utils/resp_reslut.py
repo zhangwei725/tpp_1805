@@ -3,7 +3,7 @@
 from flask_restful import marshal, fields
 
 
-def to_response_success(data, status=200, msg='成功', fields=None):
+def to_response_success(data, fields=None, status=200, msg='成功'):
     result = {
         'status': status,
         'msg': msg,

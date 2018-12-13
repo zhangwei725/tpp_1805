@@ -46,6 +46,7 @@ class Hall(db.Model):
     # 是否删除
     is_delete = db.Column(db.Boolean, default=True)
     cid = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
+    hs_list = db.relationship('HallScheduling', backref='hall', lazy='dynamic')
 
 
 class Seats(db.Model):

@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 
-from apps.cinemas.helper import AreaFields, CinemasFields
+from apps.cinemas.helper import AreaFields, CinemasFields, CinemaDetailFields
 from apps.cinemas.models import Cinema, HallScheduling
 from apps.ext import db
 from apps.main.models import Area
@@ -31,7 +31,7 @@ class CinemasResource(Resource):
             if district and district > 0:
                 # 如果有选中区域   where  city=1988 and district= 989
                 query = query.filter(Cinema.district == district)
-            #     1表示升序
+            # 1 表示升序
             if sort == 1:
                 # 降序
                 query = query.order_by(Cinema.score.desc())
@@ -82,17 +82,22 @@ class CinemaDetail(Resource):
         self.parser.add_argument('cid', type=int, required=True)
 
     def get(self):
-        cid = self.parser.parse_args().get('cid')
-        # hs_list = HallScheduling.query.filter(HallScheduling.cinema_id == cid).all()
-        # for hs in hs_list:
-        #     print(hs.cinema.name)
-        #     print(hs.movie.show_name)
-        #     print(hs.cinema.hs_list)
-        cinema = Cinema.query.get(cid)
-
-        for hs in cinema.hs_list:
-            print(hs.movie.show_name)
-        return ''
+        try:
+            cid = self.parser.parse_args().get('cid')
+            hs_list = HallScheduling.query.filter(HallScheduling.cinema_id == cid).all()
+            movies = []
+            for hs in hs_list:
+                if hs.movie not in movies:
+                    movies.append(hs.movie)
+            data = {
+                'cinema': hs_list[0].cinema,
+                'movies': movies,
+                'movie': hs_list[0].movie,
+                'hs_list': hs_list
+            }
+            return to_response_success(data=data, fields=CinemaDetailFields.result_fields)
+        except:
+            return to_response_error()
 
 
 class UpdateResource(Resource):
