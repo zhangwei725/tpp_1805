@@ -5,6 +5,7 @@ from apps.main.apis import IndexResource, HotRankingResource
 
 # Resource注册
 from apps.movie.apis import MoviesPageResource
+from apps.order.apis import SeatOrderResource, OrderResource
 
 api = Api()
 
@@ -22,3 +23,6 @@ api.add_resource(CinemasDistrictResource, '/cinemas/district/')
 api.add_resource(UpdateResource, '/update/')
 # 影院详情
 api.add_resource(CinemaDetail, '/cinemas/detail/')
+# 选座
+api.add_resource(SeatOrderResource, '/seats/')
+api.add_resource(OrderResource, '/order/')

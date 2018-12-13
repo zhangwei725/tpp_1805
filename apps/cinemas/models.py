@@ -65,7 +65,7 @@ class Seats(db.Model):
     #     外键设置
     cid = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
     hid = db.Column(db.Integer, db.ForeignKey(Hall.hid))
-
+    ss = db.relationship('SeatScheduling', uselist=False,backref='seat')
 
 # 影厅排片表
 class HallScheduling(db.Model):
@@ -79,4 +79,14 @@ class HallScheduling(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey(Movie.id))
     cinema_id = db.Column(db.Integer, db.ForeignKey(Cinema.cid))
     hall_id = db.Column(db.Integer, db.ForeignKey(Hall.hid))
+    is_delete = db.Column(db.Boolean, default=False)
+    ss_list = db.relationship('SeatScheduling', lazy='dynamic', backref='hs')
+
+
+# 座位排期表
+class SeatScheduling(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    seat_id = db.Column(db.Integer, db.ForeignKey(Seats.sid))
+    hall_id = db.Column(db.Integer, db.ForeignKey(Hall.hid))
+    hs_id = db.Column(db.Integer, db.ForeignKey(HallScheduling.hsid))
     is_delete = db.Column(db.Boolean, default=False)
